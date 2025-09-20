@@ -65,7 +65,8 @@ class AuthService {
         // Web: Use popup sign-in
         result = await _firebaseAuth.signInWithPopup(googleProvider);
       } else {
-        // Mobile: Use redirect sign-in
+        // Mobile: The issue is likely missing SHA1 fingerprint
+        // This should work once SHA1 is added to Firebase Console
         result = await _firebaseAuth.signInWithProvider(googleProvider);
       }
       

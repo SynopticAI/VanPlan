@@ -6,17 +6,16 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: '>=3.8.0 <4.0.0'
   flutter: '>=3.19.0'
 
 dependencies:
   flutter:
     sdk: flutter
   
-  # State Management - Updated to Riverpod 3.0
+  # State Management - Riverpod 3.0 (modern syntax)
   flutter_riverpod: ^3.0.0
-  riverpod_annotation: ^3.0.0
-
+  
   # Icon Generation
   flutter_launcher_icons: ^0.13.1
   
@@ -33,25 +32,20 @@ dependencies:
   cached_network_image: ^3.4.1
   flutter_svg: ^2.0.15
   
+  # Graph View for System Topology
+  graphview: ^1.2.0
+  
   # Local Storage
   sqflite: ^2.3.0
   path: ^1.8.3
   
   # Utilities
   equatable: ^2.0.5
-  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^6.0.0
-  build_runner: ^2.4.6
-  json_serializable: ^6.7.1
-  
-  # Riverpod Generator and Linting (for Riverpod 3.0)
-  custom_lint: ^0.8.0
-  riverpod_generator: ^3.0.0
-  riverpod_lint: ^3.0.0
 
 flutter:
   uses-material-design: true

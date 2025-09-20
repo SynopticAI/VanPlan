@@ -1,116 +1,130 @@
-import 'package:flutter/material.dart';
-import '../../../core/theme/app_theme.dart';
+// lib/features/system_planning/presentation/system_planning_screen.dart
 
-class SystemPlanningScreen extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/theme/app_theme.dart';
+import '../widgets/system_topology_graph.dart';
+
+class SystemPlanningScreen extends ConsumerWidget {
   const SystemPlanningScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('System Planning'),
-        backgroundColor: Colors.white,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Search Bar
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search components...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+      body: Column(
+        children: [
+          // Top control bar
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.md),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  offset: const Offset(0, 2),
+                  blurRadius: 4,
                 ),
-              ),
-            ),
-            
-            const SizedBox(height: AppSpacing.lg),
-            
-            // System Tree Structure (Placeholder)
-            Text(
-              'Van System Components',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Energy Storage Section
-            _buildSystemCategory(
-              context,
-              'Energy Storage',
-              Icons.battery_charging_full,
-              [
-                'Battery Bank 1',
-                'Battery Bank 2',
               ],
             ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Energy Sources Section
-            _buildSystemCategory(
-              context,
-              'Energy Sources',
-              Icons.solar_power,
-              [
-                'Solar Panels',
-                'Alternator Charger',
-                'Shore Power',
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Energy Conversion Section
-            _buildSystemCategory(
-              context,
-              'Energy Conversion',
-              Icons.transform,
-              [
-                'Inverter',
-                'DC-DC Converter',
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Heating Section
-            _buildSystemCategory(
-              context,
-              'Heating',
-              Icons.local_fire_department,
-              [
-                'Diesel Heater',
-              ],
-            ),
-            
-            const SizedBox(height: AppSpacing.md),
-            
-            // Dashboard Preview
-            Container(
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                gradient: AppColors.secondaryGradient,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'System Dashboard',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                    ),
+            child: Row(
+              children: [
+                // View toggle buttons
+                Expanded(
+                  child: Row(
+                    children: [
+                      _buildViewToggleButton(
+                        context,
+                        'Graph View',
+                        Icons.account_tree,
+                        isSelected: true,
+                        onTap: () {
+                          // Already in graph view
+                        },
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      _buildViewToggleButton(
+                        context,
+                        'List View',
+                        Icons.list,
+                        isSelected: false,
+                        onTap: () {
+                          // TODO: Implement list view toggle
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('List view coming soon!'),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  _buildDashboardRow('Total Cost', '\$0', Colors.white),
-                  _buildDashboardRow('Total Weight', '0 lbs', Colors.white),
-                  _buildDashboardRow('Power Generation', '0W', Colors.white),
-                  _buildDashboardRow('Power Consumption', '0W', Colors.white),
-                ],
+                ),
+                
+                // Action buttons
+                IconButton(
+                  onPressed: () {
+                    _showHelpDialog(context);
+                  },
+                  icon: const Icon(Icons.help_outline),
+                  tooltip: 'Help',
+                ),
+                IconButton(
+                  onPressed: () {
+                    // TODO: Implement reset functionality
+                    _showResetDialog(context, ref);
+                  },
+                  icon: const Icon(Icons.refresh),
+                  tooltip: 'Reset System',
+                ),
+              ],
+            ),
+          ),
+          
+          // Graph view
+          Expanded(
+            child: const SystemTopologyGraph(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildViewToggleButton(
+    BuildContext context,
+    String label,
+    IconData icon, {
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryOrange : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryOrange : AppColors.mediumGray,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isSelected ? Colors.white : AppColors.mediumGray,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Colors.white : AppColors.mediumGray,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -119,51 +133,73 @@ class SystemPlanningScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSystemCategory(
-    BuildContext context,
-    String title,
-    IconData icon,
-    List<String> components,
-  ) {
-    return Card(
-      child: ExpansionTile(
-        leading: Icon(icon, color: AppColors.primaryOrange),
-        title: Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium,
+  void _showHelpDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Graph View Help'),
+        content: const SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'How to use the System Topology Graph:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: AppSpacing.sm),
+              Text('• Tap any node to expand/collapse it'),
+              Text('• Expanded nodes show detailed component information'),
+              Text('• Click the + button to add new components'),
+              Text('• Toggle component status between Planned/Installed'),
+              Text('• Connections show system flow (energy, water, gas)'),
+              SizedBox(height: AppSpacing.sm),
+              Text(
+                'Connection Colors:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text('• Yellow: Energy connections'),
+              Text('• Blue: Water connections'),
+              Text('• White: Gas connections'),
+              Text('• Gray: Inactive connections'),
+            ],
+          ),
         ),
-        children: components.map((component) {
-          return ListTile(
-            contentPadding: const EdgeInsets.only(left: AppSpacing.xl),
-            title: Text(component),
-            trailing: IconButton(
-              icon: const Icon(Icons.add_circle_outline),
-              onPressed: () {
-                // TODO: Implement component selection
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Add $component - Coming Soon!')),
-                );
-              },
-            ),
-          );
-        }).toList(),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Got it'),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildDashboardRow(String label, String value, Color textColor) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label, style: TextStyle(color: textColor)),
-          Text(
-            value,
-            style: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.w600,
-            ),
+  void _showResetDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Reset System'),
+        content: const Text(
+          'This will remove all selected components and reset the system to empty. This action cannot be undone.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              // TODO: Implement reset functionality
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Reset functionality coming soon!'),
+                ),
+              );
+            },
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Reset'),
           ),
         ],
       ),
