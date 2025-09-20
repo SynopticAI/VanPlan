@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "144621361122",
+    "project_id": "vanplan-441af",
+    "storage_bucket": "vanplan-441af.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144621361122:android:37ce6984de2fd801848bbb",
+        "android_client_info": {
+          "package_name": "com.vanplan.app.vanplan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144621361122-r84ep928u8acqe266v2fjhubjsbogcss.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnRwH5RYGTDOFUY4E0fY3k54tRreSoG_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144621361122-r84ep928u8acqe266v2fjhubjsbogcss.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "144621361122-5liqheleuj1khdbjmvcklrjhvg8eo6sh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vanplan.app.vanplan"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
